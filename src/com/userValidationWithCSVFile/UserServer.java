@@ -13,31 +13,27 @@ public class UserServer {
 
 		UserLogin[] users = new UserLogin[4];
 
-		for (int i = 0; i < 4; i++) {
-			users[i] = userService.createUser("username" + (i + 1), "password" + (i + 1), "name" + (i + 1));
-		}
-
 		Scanner userInput = new Scanner(System.in);
 
-		String usersname;
+		String username;
 		String password;
-		String line = ""; 
 
 		BufferedReader dataReader = null;
 		try {
+			int i = 0;
+			String line = null;
 			dataReader = new BufferedReader(new FileReader("data.txt"));
-
 			while ((line = dataReader.readLine()) != null) {
-				System.out.println(line);
-				String[] userData = line.split(","); 
+				String[] userData = line.split(",");
 				UserLogin user = new UserLogin();
 				user.setUsername(userData[0]);
 				user.setPassword(userData[1]);
 				user.setName(userData[2]);
-				
-				System.out.println(userData);
-				
+				users[i] = user;
+				i++;
+
 			}
+
 		} catch (FileNotFoundException e) {
 
 			e.printStackTrace();
@@ -45,17 +41,28 @@ public class UserServer {
 
 			e.printStackTrace();
 		}
+		
+		boolean val = false;
+		int logAttemps = 0;
+		while (logAttemps < 5 && !val) {
+			System.out.println("Enter your email: ");
+			username = userInput.nextLine();
 
-		System.out.println("Enter your email: ");
-		usersname = userInput.nextLine();
+			System.out.println("Enter your password: ");
+			password = userInput.nextLine();
 
-		System.out.println("Enter your password: ");
-		password = userInput.nextLine();
+			UserLogin isVal = userService.createUser(users, username, password);
 
-		if (usersname.equals(line) && (password.equals(line))) {
-			System.out.println("Welcome ");
-		} else {
-			System.out.println("Invalid login, please try again.");
+			if (isVal != null) {
+				System.out.println("Welcome: " + isVal.getName());
+				val= true;
+			} else {
+				System.out.println("Invalid login, please try again.");
+				logAttemps++;
+				if (logAttemps >= 5) {
+					System.out.println("Too many failed login attempts, you are now locked out.");
+				}
+			}
 		}
 
 		userInput.close();

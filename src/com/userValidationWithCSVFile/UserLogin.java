@@ -6,18 +6,6 @@ public class UserLogin {
 	private String password;
 	private String name;
 	
-//	public Userlogin (String[] values) {
-//		this.username = value[0];
-//		this.password = value[0];
-//		this.name = value[0];
-//	}
-
-//	public UserLogin(String[] split) {
-//		this.username = split[0];
-//		this.password = split[0];
-//		this.name = split[0];
-//	}
-
 	public String getUsername() {
 		return username;
 	}
